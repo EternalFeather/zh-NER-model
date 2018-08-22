@@ -106,11 +106,14 @@ elif args.mode == 'demo':
                 print('Error for input format, see you next time!')
                 break
             else:
-                demo_sent = list(demo_sent.strip())
-                demo_data = [(demo_sent, ['O'] * len(demo_sent))]
-                tag = model.demo_one(sess, demo_data)
-                IPT = get_entity(tag, demo_sent)
-                print('Key entities: {}'.format(IPT))
+                try:
+                    demo_sent = list(demo_sent.strip())
+                    demo_data = [(demo_sent, ['O'] * len(demo_sent))]
+                    tag = model.demo_one(sess, demo_data)
+                    IPT = get_entity(tag, demo_sent)
+                    print('Key entities: {}'.format(IPT))
+                except:
+                    print('Please switch to manual service ...')
 
 
 

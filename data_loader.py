@@ -1,5 +1,7 @@
 import pickle, random
 from collections import defaultdict
+from string import punctuation as p
+import re
 
 tag2label = {'O': 0, 'B-IPT': 1, 'I-IPT': 2}
 
@@ -80,20 +82,37 @@ def load_vocabulary(path):
     return word2idx
 
 
-def sentence2id(sent, word2id):
+def sentence2id(text, word2id):
     '''
     Word tokenizer for one sentence
+    Input: list ['您', 'n', ...]
     '''
-    sentence_id = []
-    for word in sent:
+    sentence_id, new_sentence = [], []
+    # clean sentence
+    text = "".join(text)
+    text = text.lower()
+    text = re.sub(r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)", "", text)
+    text = re.sub(r"登陆", "登录", text)
+    text = re.sub(r"原件", "组件", text)
+    text = re.sub(r"新人", "新员工", text)
+    text = re.sub(r"变更", "变动", text)
+    text = re.sub(r"您", "你", text)
+    text = re.sub(r" +", "", text)
+
+    stop_p = p + "~·！@#￥%……&*（）——=+-{}【】：；“”‘’《》，。？、|、"
+
+    for word in text:
         if word.isdigit():
             word = '<NUM>'
         elif ('\u0041' <= word <= '\u005a') or ('\u0061' <= word <= '\u007a'):
             word = '<ENG>'
+        elif word in stop_p:
+            continue
         if word not in word2id:
             word = '<UNK>'
         sentence_id.append(word2id[word])
-    return sentence_id
+        new_sentence.append(word)
+    return sentence_id, new_sentence
 
 
 def batch_yield(data, batch_size, vocab, tag2label, shuffle=False):
@@ -106,7 +125,7 @@ def batch_yield(data, batch_size, vocab, tag2label, shuffle=False):
 
     seqs, labels = [], []
     for (sent_, tag_) in data:
-        sent_ = sentence2id(sent_, vocab)
+        sent_, new_sent = sentence2id(sent_, vocab)
         label_ = [tag2label[tag] for tag in tag_]
 
         if len(seqs) == batch_size:
