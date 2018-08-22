@@ -34,7 +34,7 @@ def build_vocabulary(vocab_path, corpus_path, min_count):
     word2idx['<UNK>'] = new_id
     print(len(word2idx))
 
-    with open(vocab_path, 'wb', encoding='utf-8') as f:
+    with open(vocab_path, 'wb') as f:
         pickle.dump(word2idx, f)
 
 
@@ -70,7 +70,7 @@ def load_vocabulary(path):
     '''
     Load word vocabulary with dictionary format
     '''
-    with open(path, 'rb', encoding='utf-8') as f:
+    with open(path, 'rb') as f:
         word2idx = pickle.load(f)
     print('vocabulary_size : {}'.format(len(word2idx)))
     return word2idx
