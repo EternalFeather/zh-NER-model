@@ -32,6 +32,7 @@ def get_IPT_entity(tag_seq, char_seq):
     char_seq = [char for char in char_seq if char not in stop_p]
     for i, (char, tag) in enumerate(zip(char_seq, tag_seq)):
         # flag for judging end signal
+        print(char, tag)
         if tag == 'B-IPT':
             if 'ipt' in locals().keys():
                 IPT.append(ipt)
@@ -41,6 +42,8 @@ def get_IPT_entity(tag_seq, char_seq):
                 IPT.append(ipt)
                 del ipt
         elif tag == 'I-IPT':
+            if 'ipt' not in locals().keys():
+                continue
             ipt += char
             if i + 1 == length:
                 IPT.append(ipt)
@@ -51,4 +54,4 @@ def get_IPT_entity(tag_seq, char_seq):
                 del ipt
         else:
             print('Judgement Exception ... (Please debug)')
-    return IPT
+    return set(IPT)
