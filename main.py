@@ -68,6 +68,9 @@ logging.getLogger().addHandler(handler)
 
 logger.info(str(args))
 
+train_path = args.train_data
+train_data = read_corpus(train_path)
+
 if os.path.exists('./dataset/vocabulary.pkl'):
     vocab = load_vocabulary('./dataset/vocabulary.pkl')
 else:
@@ -76,9 +79,6 @@ else:
 
 # read_dataset & training
 if args.mode == 'train':
-    train_path = args.train_data
-    train_data = read_corpus(train_path)
-
     model = BiLSTM_CRF(args, tag2label, vocab, log_path, logger, config)
     model.build_graph()
     print('Start training ...')

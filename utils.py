@@ -26,13 +26,12 @@ def get_IPT_entity(tag_seq, char_seq):
     '''
     Tags for IPT entity
     '''
-    length = len(char_seq)
     IPT = []
     stop_p = p + "~·！@#￥%……&*（）——=+-{}【】：；“”‘’《》，。？、|、"
     char_seq = [char for char in char_seq if char not in stop_p]
+    length = len(char_seq)
     for i, (char, tag) in enumerate(zip(char_seq, tag_seq)):
         # flag for judging end signal
-        print(char, tag)
         if tag == 'B-IPT':
             if 'ipt' in locals().keys():
                 IPT.append(ipt)
