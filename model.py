@@ -212,6 +212,8 @@ class BiLSTM_CRF(object):
 
     def conlleval(self, label_predict, label_path, metric_path):
         eval_perl = './output/conlleval_rev.pl'
+        if not os.path.exists(eval_perl):
+            os.makedirs(eval_perl)
         with open(label_path, 'w', encoding='utf-8') as f:
             for sent_result in label_predict:
                 for char, tag, tag_ in sent_result:
