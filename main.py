@@ -34,33 +34,34 @@ args = parser.parse_args()
 log_path = {}
 timestamp = str(int(time.time())) if args.mode == 'train' else args.model
 
-output_path = './output/Output/save_' + timestamp + 'output'
+output_path = os.path.join('.', "model_save", timestamp)
 if not os.path.exists(output_path):
     os.makedirs(output_path)
 log_path['output_path'] = output_path
 
-summary_path = './output/Summary/save_' + 'summary'
+summary_path = os.path.join(output_path, 'summary')
 if not os.path.exists(summary_path):
     os.makedirs(summary_path)
 log_path['summary_path'] = summary_path
 
-model_path = './output/Checkpoint/save_' + 'checkpoint'
+model_path = os.path.join(output_path, 'checkpoint/')
+ckpt_prefix = os.path.join(model_path, 'model')
 if not os.path.exists(model_path):
     os.makedirs(model_path)
-log_path['model_path'] = model_path
+log_path['model_path'] = ckpt_prefix
 
-result_path = './output/Result/save_' + 'result'
+result_path = os.path.join(output_path, 'result')
 if not os.path.exists(result_path):
     os.makedirs(result_path)
 log_path['result_path'] = result_path
 
-logger_path = './output/Logger/save_' + 'log.txt'
+logger_path = os.path.join(result_path, 'log.txt')
 log_path['logger_path'] = logger_path
 
 logger = logging.getLogger('logger')
 logger.setLevel(logging.DEBUG)
 logging.basicConfig(format='%(message)s', level=logging.DEBUG)
-handler = logging.FileHandler('')
+handler = logging.FileHandler(logger_path)
 handler.setLevel(logging.DEBUG)
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s: %(message)s'))
 logging.getLogger().addHandler(handler)
