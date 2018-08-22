@@ -12,7 +12,7 @@ class BiLSTM_CRF(object):
     def __init__(self, args, tag2label, vocab, log_path, logger, config, pretrain_embedding=None):
         self.batch_size = args.batch_size
         self.epoch_num = args.epoch
-        self.hidden_size = args.hidden_size
+        self.hidden_size = args.hidden_units
         self.CRF = args.CRF
         self.embedding_size = args.embedding_size
         self.update_embedding = args.update_embedding
@@ -35,7 +35,7 @@ class BiLSTM_CRF(object):
     def build_graph(self):
         # placeholder
         self.inputs = tf.placeholder(tf.int32, shape=[None, None], name='word_tokens')
-        self.labels = tf.placeholder(tf.int32, shape=[None, self.num_tags], name='labels')
+        self.labels = tf.placeholder(tf.int32, shape=[None, None], name='labels')
         self.sequence_lengths = tf.placeholder(tf.int32, shape=[None], name='sequence_lengths')
         self.dropout_pl = tf.placeholder(tf.float32, name='dropout')
 
@@ -104,7 +104,7 @@ class BiLSTM_CRF(object):
         # optimizer_define
         with tf.variable_scope('optimizer'):
             self.global_step = tf.Variable(tf.constant(0), name='global_step', trainable=False)
-            if self.optimzer == 'Adam':
+            if self.optimizer == 'Adam':
                 optim = tf.train.AdamOptimizer(learning_rate=self.lr_pl)
             elif self.optimizer == 'Adadelta':
                 optim = tf.train.AdadeltaOptimizer(learning_rate=self.lr_pl)
@@ -126,7 +126,7 @@ class BiLSTM_CRF(object):
         self.merged = tf.summary.merge_all()
         self.file_writer = tf.summary.FileWriter(self.summary_path, sess.graph)
 
-    def train(self, sess, train, dev):
+    def train(self, sess, train, dev, saver):
         self.add_summary(sess)
         for epoch in range(self.epoch_num):
             self.run_one_epoch(sess, train, dev, self.tag2label, epoch, saver)
@@ -158,7 +158,7 @@ class BiLSTM_CRF(object):
         self.evaluate(label_list_dev, dev, epoch)
 
     def get_feed_dict(self, seqs, labels=None, dropout=None):
-        word_tokens, seq_len_list = pad_sequence(seqs, pad_mark=0)
+        word_tokens, seq_len_list = pad_sequences(seqs, pad_mark=0)
         feed_dict = {self.inputs: word_tokens,
                      self.sequence_lengths: seq_len_list}
         if labels is not None:
@@ -173,8 +173,8 @@ class BiLSTM_CRF(object):
         label_list, seq_len_list = [], []
         for seqs, labels in batch_yield(dev, self.batch_size, self.vocab, self.tag2label, shuffle=False):
             label_list_, seq_len_list_ = self.predict_one_batch(sess, seqs)
-            label_list.append(label_list_)
-            seq_len_list.append(seq_len_list_)
+            label_list.extend(label_list_)
+            seq_len_list.extend(seq_len_list_)
 
         return label_list, seq_len_list
 

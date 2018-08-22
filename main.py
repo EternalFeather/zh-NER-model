@@ -77,6 +77,7 @@ if args.mode == 'train':
         vocab = load_vocabulary('./dataset/vocabulary.pkl')
     else:
         build_vocabulary('./dataset/vocabulary.pkl', train_path, 10)
+        vocab = load_vocabulary('./dataset/vocabulary.pkl')
 
     model = BiLSTM_CRF(args, tag2label, vocab, log_path, logger, config)
     model.build_graph()
@@ -86,7 +87,7 @@ if args.mode == 'train':
     saver = tf.train.Saver(tf.global_variables())
     with tf.Session(config=model.config) as sess:
         sess.run(tf.global_variables_initializer())
-        model.train(sess=sess, train=train_data, dev=train_data)
+        model.train(sess=sess, train=train_data, dev=train_data, saver=saver)
 
 elif args.mode == 'demo':
     ckpt_file = tf.train.latest_checkpoint(model_path)

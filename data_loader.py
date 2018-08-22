@@ -27,12 +27,16 @@ def build_vocabulary(vocab_path, corpus_path, min_count):
 
     # rerank vocabulary
     new_id = 1
-    word2idx['<PAD>'] = 0
     for word in word2idx.keys():
         word2idx[word] = new_id
         new_id += 1
+    word2idx['<PAD>'] = 0
     word2idx['<UNK>'] = new_id
     print(len(word2idx))
+
+    with open('./dataset/vocabulary.txt', 'w', encoding='utf-8') as f:
+        for k, v in word2idx.items():
+            f.write("{}\t{}\n".format(k, v))
 
     with open(vocab_path, 'wb') as f:
         pickle.dump(word2idx, f)
