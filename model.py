@@ -1,4 +1,5 @@
 import numpy as np
+from tqdm import tqdm
 import time, os
 import tensorflow as tf
 from tensorflow.contrib.rnn import LSTMCell
@@ -135,8 +136,8 @@ class BiLSTM_CRF(object):
         num_batches = (len(train) + self.batch_size - 1) // self.batch_size
         start_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         batches = batch_yield(train, self.batch_size, self.vocab, self.tag2label, shuffle=self.shuffle)
-        for step, (seqs, labels) in enumerate(batches):
-            print('Processing: {} batch / {} batches.'.format(step + 1, num_batches))
+        for step, (seqs, labels) in tqdm(enumerate(batches)):
+            # print('Processing: {} batch / {} batches.'.format(step + 1, num_batches))
             step_num = epoch * num_batches + step + 1
             feed_dict, _ = self.get_feed_dict(seqs, labels, self.dropout_keep_prob)
             _, loss, summary, _ = sess.run([self.train_op, self.loss, self.merged, self.global_step],
