@@ -1,0 +1,7 @@
+2018-08-29 10:48:47,456:INFO: Namespace(CRF=True, batch_size=64, clip=5.0, dropout=0.5, embedding_size=300, epoch=40, hidden_units=300, lr=0.001, mode='train', model=None, optimizer='Adam', shuffle=True, train_data='./dataset/train.txt', update_embedding=True)
+2018-08-29 10:48:47,704:WARNING: From /usr/local/python3/lib/python3.5/site-packages/tensorflow/python/ops/rnn.py:417: calling reverse_sequence (from tensorflow.python.ops.array_ops) with seq_dim is deprecated and will be removed in a future version.
+Instructions for updating:
+seq_dim is deprecated, use seq_axis instead
+2018-08-29 10:48:47,707:WARNING: From /usr/local/python3/lib/python3.5/site-packages/tensorflow/python/util/deprecation.py:432: calling reverse_sequence (from tensorflow.python.ops.array_ops) with batch_dim is deprecated and will be removed in a future version.
+Instructions for updating:
+batch_dim is deprecated, use batch_axis instead
