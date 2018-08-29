@@ -3,7 +3,8 @@ from collections import defaultdict
 from string import punctuation as p
 import re
 
-tag2label = {'O': 0, 'B-IPT': 1, 'I-IPT': 2}
+tag2label = {'O': 0, 'B-VER': 1, 'I-VER': 2, 'B-ENG': 3, 'I-ENG': 4, 'B-NOR': 5, 'I-NOR': 6,
+             'B-OTH': 7, 'I-OTH': 8}
 
 
 def build_vocabulary(vocab_path, corpus_path, min_count):
