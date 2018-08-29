@@ -110,11 +110,8 @@ elif args.mode == 'demo':
                     demo_sent = list(demo_sent.strip())
                     demo_data = [(demo_sent, ['O'] * len(demo_sent))]
                     tag = model.demo_one(sess, demo_data)
-                    IPT = get_entity(tag, demo_sent)
-                    if len(IPT) == 0:
-                        print('Please switch to manual service ...')
-                    else:
-                        print('Key entities: {}'.format(IPT))
+                    NOR, VER, ENG, OTH = get_entity(tag, demo_sent)
+                    print('NOR: {}, VER: {}, ENG: {}, OTH: {}'.format(NOR, VER, ENG, OTH))
                 except:
                     print('Please switch to manual service ...')
 
